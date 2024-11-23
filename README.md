@@ -8,7 +8,7 @@ A tool that can publish packages in the Maven local repository
 # encoding
 
 # build
-go build -mod=vendor -ldflags="-s -w" -v -o nexus_deploy ./main.go
+go build -mod=vendor -ldflags="-s -w" -v -o deploy_local_repo ./main.go
 
 # package
 ./build.sh
@@ -30,6 +30,7 @@ go build -mod=vendor -ldflags="-s -w" -v -o nexus_deploy ./main.go
 
 
 Folders with the following suffixes are ignored
+* `.DS_Store`
 * `.lastUpdated`
 * `.md5`
 * `.repositories`
@@ -42,11 +43,11 @@ Folders with the following suffixes are ignored
 # 3 Use
 
 ```bash
-chmod +x nexus_deploy
+chmod +x deploy_local_repo
 
 # Execute the deploy command, 
 # and the supported parameters are shown in the table below
-./nexus_deploy -s /opt/tmp/settings.xml -repo /opt/repo
+./deploy_local_repo -s /opt/tmp/settings.xml -repo /opt/repo
 
 ```
 

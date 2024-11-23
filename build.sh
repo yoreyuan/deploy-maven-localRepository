@@ -19,8 +19,9 @@ if [ -f "${dirName}-bin.zip" ]; then
 fi
 
 for osName in ${OS_ARR[@]}; do
-  GOOS=${osName} go build -mod=vendor -ldflags="-s -w" -v -o nexus_deploy-${osName}-${GOARCH} ./main.go
-  mv nexus_deploy-${osName}-${GOARCH} ${dirName}/
+  GOOS=${osName} go build -mod=vendor -ldflags="-s -w" -v -o deploy_local_repo ./main.go
+  mkdir ${dirName}/${osName}-${GOARCH}
+  mv deploy_local_repo ${dirName}/${osName}-${GOARCH}/
 done
 
 cp readme.md ${dirName}/

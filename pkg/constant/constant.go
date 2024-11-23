@@ -10,6 +10,7 @@ var (
 	Verbose         = false
 	MvnDebug        = false
 	ExcludeSuffixs  = []string{
+		".DS_Store",
 		".asc",
 		".lastUpdated",
 		".md5",

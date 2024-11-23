@@ -11,9 +11,25 @@ A tool that can publish packages in the Maven local repository
 go build -mod=vendor -ldflags="-s -w" -v -o deploy_local_repo ./main.go
 
 # package
+# It will generate the 'deploy_maven_localRepository-bin.zip' file
 ./build.sh
 
 ```
+
+The 'deploy_maven_localRepository-bin.zip' directories are described as follows：
+```
+deploy_maven_localRepository
+├── darwin-amd64    # Mac OS
+│   └── deploy_local_repo
+├── linux-amd64     # linux OS
+│   └── deploy_local_repo
+├── readme.md
+├── settings.xml.template       # maven settings.xml template
+└── windows-amd64   # Windows OS
+    └── deploy_local_repo
+
+```
+
 
 # 2 Support
 | packaging      | classifier      | example                                               |

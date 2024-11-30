@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"yoreyuan/deploy-maven-localRepository/pkg/config"
 )
 
 func Run() {
@@ -16,7 +15,7 @@ func Run() {
 		log.Err(err).Msg("Exception when traversing files")
 	}
 
-	if config.GetConfig().Clean.Enable {
+	if conf.Clean.Enable {
 		err = doClean(*pomDirSet.GetSet())
 		if err != nil {
 			log.Err(err).Msg("Exception during clean operation")
@@ -24,9 +23,11 @@ func Run() {
 		return
 	}
 
-	err = executeMvn(*pomDirSet.GetSet())
-	if err != nil {
-		log.Err(err).Msg("Exception during mvn operation")
+	if conf.Deploy.Enable {
+		err = executeMvn(*pomDirSet.GetSet())
+		if err != nil {
+			log.Err(err).Msg("Exception during mvn operation")
+		}
 	}
 }
 

@@ -9,7 +9,7 @@ OS_ARR=(
 "darwin"
 )
 
-dirName="deploy_maven_localRepository"
+dirName="tools_maven_localRepository"
 if [ -d "${dirName}" ]; then
   rm -rf ${dirName}
 fi
@@ -19,9 +19,9 @@ if [ -f "${dirName}-bin.zip" ]; then
 fi
 
 for osName in ${OS_ARR[@]}; do
-  GOOS=${osName} go build -mod=vendor -ldflags="-s -w" -v -o deploy_local_repo ./main.go
+  GOOS=${osName} go build -mod=vendor -ldflags="-s -w" -v -o tools_localRepo ./main.go
   mkdir ${dirName}/${osName}-${GOARCH}
-  mv deploy_local_repo ${dirName}/${osName}-${GOARCH}/
+  mv tools_localRepo ${dirName}/${osName}-${GOARCH}/
 done
 
 cp readme.md ${dirName}/

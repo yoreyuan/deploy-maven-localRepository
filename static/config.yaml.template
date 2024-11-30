@@ -5,7 +5,8 @@ logLevel: "INFO"
 # The path to the local repository maven will use to store artifacts
 localRepository: "~/.m2/repository"
 
-repo:
+deploy:
+  enable: true
   commandName: "/usr/local/bin/mvn"
   # Alternate path for the user settings file
   settingXml: "~/.m2/settings.xml"

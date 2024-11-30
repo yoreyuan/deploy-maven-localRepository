@@ -1,33 +1,38 @@
-deploy-maven-localRepository
+tools-maven-localRepository
 ============================
 
-A tool that can publish packages in the Maven local repository
+A maven localRepository tools, the main functions are as follows:
+* Support **publishing local packages** to Maven repository
+* Support **clearing files** with specified suffix in local repository
+* Supports specifying values through parameters (**Deprecated**)
+* Supports specifying parameters through yaml files
+
 
 # 1 dev
 ```bash
 # encoding
 
 # build
-go build -mod=vendor -ldflags="-s -w" -v -o deploy_local_repo ./main.go
+go build -mod=vendor -ldflags="-s -w" -v -o tools_localRepo ./main.go
 
 # package
-# It will generate the 'deploy_maven_localRepository-bin.zip' file
+# It will generate the 'tools_maven_localRepository-bin.zip' file
 ./build.sh
 
 ```
 
-The 'deploy_maven_localRepository-bin.zip' directories are described as follows：
+The 'tools_maven_localRepository-bin.zip' directories are described as follows：
 ```
-deploy_maven_localRepository
+tools_maven_localRepository
 ├── config.yaml.template    # APP configuration file template
 ├── darwin-amd64    # Mac OS
-│   └── deploy_local_repo
+│   └── tools_localRepo
 ├── linux-amd64     # linux OS
-│   └── deploy_local_repo
+│   └── tools_localRepo
 ├── readme.md
 ├── settings.xml.template       # maven settings.xml template
 └── windows-amd64   # Windows OS
-    └── deploy_local_repo
+    └── tools_localRepo
 
 ```
 
@@ -63,12 +68,13 @@ Prerequisites:
 * mvn
 * JDK
 
+## 3.1 By parameters (Deprecated)
 ```bash
-chmod +x deploy_local_repo
+chmod +x tools_localRepo
 
 # Execute the deploy command, 
 # and the supported parameters are shown in the table below
-./deploy_local_repo -s /opt/tmp/settings.xml -repo /opt/repo
+./tools_localRepo -s /opt/tmp/settings.xml -repo /opt/repo
 
 ```
 
@@ -83,9 +89,50 @@ chmod +x deploy_local_repo
 | `-X`         | -                                              |                       | Output maven debugging information   |
 
 
+## 3.2 By yaml file
 Or through a configuration file with the parameter `--config`
 ```bash
-./deploy_local_repo --config ./config.yaml
+./tools_localRepo --config ./config.yaml
 ```
 
 For more configuration information, see configuration template file [`config.yaml.template`](static/config.yaml.template)
+```yaml
+# Output project debugging information
+verbose: false
+logLevel: "INFO"
+
+# The path to the local repository maven will use to store artifacts
+localRepository: "~/.m2/repository"
+
+deploy:
+  enable: true
+  commandName: "/usr/local/bin/mvn"
+  # Alternate path for the user settings file
+  settingXml: "~/.m2/settings.xml"
+  # The ID of the repository
+  id: "yore_nexus"
+  # The URL of the repository maven
+  url: "http://nexus.yore.cn/repository/maven-releases"
+  # Output maven debugging information
+  debug: false
+
+  # The list of file suffixes to be ignored
+  excludeSuffixs:
+    - ".DS_Store"
+    - ".asc"
+    - ".lastUpdated"
+    - ".md5"
+    - ".repositories"
+    - ".sha1"
+    - ".sha256"
+    - ".sha512"
+    - ".xml"
+
+clean:
+  # If it is in cleaning mode, the list of file suffixes that will be cleaned up
+  enable: false
+  suffixs:
+    - ".DS_Store"
+    - ".lastUpdated"
+
+```

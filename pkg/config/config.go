@@ -13,11 +13,12 @@ type Config struct {
 	Verbose         bool   `mapstructure:"verbose,default=false"`
 	LogLevel        string `yaml:"logLevel"`
 	LocalRepository string `mapstructure:"localRepository,default=~/.m2/repository"`
-	MvnRepo         `mapstructure:"repo"`
+	Deploy          `mapstructure:"deploy"`
 	Clean           RepoClean `mapstructure:"clean"`
 }
 
-type MvnRepo struct {
+type Deploy struct {
+	Enable         bool   `mapstructure:"enable,default=true"`
 	CommandName    string `mapstructure:"commandName,default=mvn"`
 	SettingXml     string `mapstructure:"settingXml,default=~/.m2/settings.xml"`
 	RepoId         string `mapstructure:"id,default=yore_nexus"`
@@ -40,7 +41,8 @@ func NewDefaultConfig() *Config {
 		Verbose:         false,
 		LogLevel:        "INFO",
 		LocalRepository: "",
-		MvnRepo: MvnRepo{
+		Deploy: Deploy{
+			Enable:         true,
 			CommandName:    "mvn",
 			SettingXml:     "",
 			RepoId:         "yore_nexus",

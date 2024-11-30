@@ -1,0 +1,37 @@
+# Output project debugging information
+verbose: false
+logLevel: "INFO"
+
+# The path to the local repository maven will use to store artifacts
+localRepository: "~/.m2/repository"
+
+repo:
+  commandName: "/usr/local/bin/mvn"
+  # Alternate path for the user settings file
+  settingXml: "~/.m2/settings.xml"
+  # The ID of the repository
+  id: "yore_nexus"
+  # The URL of the repository maven
+  url: "http://nexus.yore.cn/repository/maven-releases"
+  # Output maven debugging information
+  debug: false
+
+  # The list of file suffixes to be ignored
+  excludeSuffixs:
+    - ".DS_Store"
+    - ".asc"
+    - ".lastUpdated"
+    - ".md5"
+    - ".repositories"
+    - ".sha1"
+    - ".sha256"
+    - ".sha512"
+    - ".xml"
+
+clean:
+  # If it is in cleaning mode, the list of file suffixes that will be cleaned up
+  enable: false
+  suffixs:
+    - ".DS_Store"
+    - ".lastUpdated"
+

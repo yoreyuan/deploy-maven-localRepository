@@ -1,6 +1,8 @@
 package utils
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 func Obj2JsonStr(v any) string {
 	body, err := json.Marshal(v)

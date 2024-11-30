@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"yoreyuan/deploy-maven-localRepository/pkg/config"
 	"yoreyuan/deploy-maven-localRepository/pkg/constant"
 	"yoreyuan/deploy-maven-localRepository/pkg/utils"
 )
@@ -20,14 +21,23 @@ type MvnModel struct {
 	Classifier string //sources,tests,linux-x86_64 etc.
 }
 
-var errMvnCmd = make([]string, 0)
+var (
+	pomDirSet = utils.NewSet()
+	errMvnCmd []string
+	conf      *config.Config
+)
+
+func Init() {
+	errMvnCmd = make([]string, 0)
+	conf = config.GetConfig()
+}
 
 func executeMvn(pomDir map[string]bool) error {
 	var index int = 0
 	c := len(pomDir)
 
 	for item := range pomDir {
-		if constant.Verbose {
+		if conf.Verbose {
 			log.Info().Msgf("Start processing packages in folder %s", item)
 		}
 		entries, err := os.ReadDir(item)
@@ -46,7 +56,7 @@ func executeMvn(pomDir map[string]bool) error {
 		var j = 0
 		for _, entry := range entries {
 			fileName := entry.Name()
-			if constant.Verbose {
+			if conf.Verbose {
 				j++
 				if j == len(entries) {
 					println(" └ ", fileName)
@@ -73,7 +83,7 @@ func executeMvn(pomDir map[string]bool) error {
 
 			// Skip files not included
 			c := false
-			for _, s := range constant.ExcludeSuffixs {
+			for _, s := range conf.ExcludeSuffixs {
 				if strings.HasSuffix(fileName, s) {
 					c = true
 					break
@@ -145,20 +155,20 @@ func executeMvn(pomDir map[string]bool) error {
 }
 
 func mvnDeploy(mvnModel *MvnModel) error {
-	if constant.Verbose {
+	if conf.Verbose {
 		log.Info().Msg(utils.Obj2JsonStr(mvnModel))
 	}
 	var cmd *exec.Cmd
 	cmdArgs := make([]string, 0)
 	cmdArgs = append(cmdArgs,
-		"-s", constant.SettingXml,
+		"-s", conf.SettingXml,
 		"deploy:deploy-file",
 		"-Dfile="+mvnModel.File,
 		"-DpomFile="+mvnModel.PomFile,
 		"-Dclassifier="+mvnModel.Classifier,
-		"-Durl="+constant.RepoUrl,
-		"-DrepositoryId="+constant.RepoId)
-	if constant.MvnDebug {
+		"-Durl="+conf.RepoUrl,
+		"-DrepositoryId="+conf.RepoId)
+	if conf.MvnDebug {
 		cmdArgs = append(cmdArgs, "-X")
 	}
 
@@ -167,8 +177,8 @@ func mvnDeploy(mvnModel *MvnModel) error {
 	} else {
 		cmdArgs = append(cmdArgs, "-Dpackaging="+mvnModel.Packaging)
 	}
-	cmd = exec.Command("mvn", cmdArgs...)
-	if constant.Verbose {
+	cmd = exec.Command(conf.CommandName, cmdArgs...)
+	if conf.Verbose {
 		log.Info().Msg(cmd.String())
 	}
 
@@ -178,13 +188,14 @@ func mvnDeploy(mvnModel *MvnModel) error {
 
 	// Run the command and wait for it to complete
 	err := cmd.Run()
+
+	// Print the output of a command
+	fmt.Println(out.String())
+
 	if err != nil {
 		errMvnCmd = append(errMvnCmd, cmd.String())
 		return err
 	}
-
-	// Print the output of a command
-	fmt.Println(out.String())
 
 	return nil
 }

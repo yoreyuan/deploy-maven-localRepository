@@ -19,6 +19,7 @@ go build -mod=vendor -ldflags="-s -w" -v -o deploy_local_repo ./main.go
 The 'deploy_maven_localRepository-bin.zip' directories are described as follows：
 ```
 deploy_maven_localRepository
+├── config.yaml.template    # APP configuration file template
 ├── darwin-amd64    # Mac OS
 │   └── deploy_local_repo
 ├── linux-amd64     # linux OS
@@ -56,7 +57,11 @@ Folders with the following suffixes are ignored
 * `.xml`
 
 
-# 3 Use
+# 3 Getting Started
+
+Prerequisites:
+* mvn
+* JDK
 
 ```bash
 chmod +x deploy_local_repo
@@ -77,3 +82,10 @@ chmod +x deploy_local_repo
 | `-verbose`   | -                                              |                       | Output project debugging information |
 | `-X`         | -                                              |                       | Output maven debugging information   |
 
+
+Or through a configuration file with the parameter `--config`
+```bash
+./deploy_local_repo --config ./config.yaml
+```
+
+For more configuration information, see configuration template file [`config.yaml.template`](static/config.yaml.template)

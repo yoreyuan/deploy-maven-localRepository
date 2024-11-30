@@ -25,7 +25,8 @@ for osName in ${OS_ARR[@]}; do
 done
 
 cp readme.md ${dirName}/
-cp settings.xml.template ${dirName}/
+cp static/config.yaml.template ${dirName}/
+cp static/settings.xml.template ${dirName}/
 
 zip -r ${dirName}-bin.zip ${dirName}/
 rm -rf ${dirName}

@@ -6,17 +6,22 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"yoreyuan/deploy-maven-localRepository/pkg/constant"
-	"yoreyuan/deploy-maven-localRepository/pkg/utils"
+	"yoreyuan/deploy-maven-localRepository/pkg/config"
 )
-
-var pomDirSet = utils.NewSet()
 
 func Run() {
 	//err := filepath.Walk(constant.LocalRepository, visit)
-	err := listFilesRecursively(constant.LocalRepository)
+	err := listFilesRecursively(conf.LocalRepository)
 	if err != nil {
 		log.Err(err).Msg("Exception when traversing files")
+	}
+
+	if config.GetConfig().Clean.Enable {
+		err = doClean(*pomDirSet.GetSet())
+		if err != nil {
+			log.Err(err).Msg("Exception during clean operation")
+		}
+		return
 	}
 
 	err = executeMvn(*pomDirSet.GetSet())

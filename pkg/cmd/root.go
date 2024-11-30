@@ -1,12 +1,15 @@
 package cmd
 
-import "yoreyuan/deploy-maven-localRepository/pkg/mvn"
+import (
+	"yoreyuan/deploy-maven-localRepository/pkg/mvn"
+)
 
 func Execute() {
-	c := initArgs()
-	if !c {
+	err := initArgs()
+	if err != nil {
 		return
 	}
 
+	mvn.Init()
 	mvn.Run()
 }
